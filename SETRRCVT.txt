@@ -18,6 +18,8 @@
 /*          z/OS Security Server RACF Data Areas manual:             */
 /*            http://publibz.boulder.ibm.com/epubs/pdf/ich2c400.pdf  */
 /*********************************************************************/
+/* Get info from storage, most of this section is a straight lift    */
+/* from IPLINFO!                                                     */    
 CVT      = C2d(Storage(10,4))                /* point to CVT         */ 
 CVTVERID = Storage(D2x(CVT - 24),16)         /* "user" software vers.*/ 
 PRODNAME = Storage(D2x(CVT - 40),7)          /* point to mvs version */ 
@@ -33,9 +35,7 @@ If Bitand(CVTOSLV2,'01'x) <> '01'x then ,    /* below OS/390 R10     */
 RACFMOD  = Substr(RACFVRM,4,1)               /* RACF MOD level       */ 
 RACFLEV  = RACFVER || '.' || RACFREL || '.' || RACFMOD                  
 RCVTDSN = Strip(Storage(D2x(RCVT + 56),44))  /* RACF prim dsn        */ 
-                                                                                                      
-/**/                                                                    
-                                                                        
+                                                                                                                                                                                                                                                 
   RCVTDSDT  = C2d(Storage(D2x(RCVT + 224),4))  /* point to RACFDSDT  */   
   DSDTNUM   = C2d(Storage(D2x(RCVTDSDT+4),4))  /* num RACF dsns      */   
   DSDTPRIM  = Storage(D2x(RCVTDSDT+177),44)    /* point to prim ds   */   
@@ -51,7 +51,7 @@ RCVTDSN = Strip(Storage(D2x(RCVT + 56),44))  /* RACF prim dsn        */
   RCVTUADS = Strip(Storage(D2x(RCVT + 100),44)) /* UADS dsn          */ 
     say  '  The UADS dataset is' RCVTUADS'.'                             
                                                                         
-/* Get the RVARY password info" */                                     
+/* Get the RVARY password info */                                     
 RCVTSWPW = Strip(Storage(D2x(RCVT + 440),8))  /* rvary switch pw     */
 if c2x(RCVTSWPW) = "0000000000000000" then                             
  say "RVARY SWITCH password is set to default value of YES"            
@@ -60,16 +60,47 @@ RCVTINPW = Strip(Storage(D2x(RCVT + 448),8))  /* rvary status pw     */
 if c2x(RCVTINPW) = "0000000000000000" then                             
  say "RVARY STATUS password is set to default value of YES"            
  else say "RVARY STATUS password DES hash:" c2x(RCVTINPW)                     
-/* Get password and other related settings */ 
-RCVTSNTX = Strip(Storage(D2x(RCVT + 244),10)) /* PW syntax rules     */   
-say "Password syntax rules:" RCVTSNTX                                   
-say "LEGEND:",                                                          
-    "A-ALPHA C-CONSONANT L-ALPHANUM N-NUMERIC V-VOWEL W-NOVOWEL" ,      
-    "*-ANYTHING"                                                        
-RCVTSLEN = C2D(Strip(Storage(D2x(RCVT + 244),1))) /* min pw length   */ 
-Say "Min password length:" RCVTSLEN                                     
-RCVTELEN = C2D(Strip(Storage(D2x(RCVT + 245),1))) /* max pw length   */ 
-Say "Max password length:" RCVTELEN                                     
+/* Get password and other related settings */                          
+/* it seems that if a rule is set to 8 "*"s then it defaults to     */
+/* "0"s......                                                       */
+RCVTSNT1 = Strip(Storage(D2x(RCVT + 246),8)) /* PW syntax rules     */ 
+RCVTSNT2 = Strip(Storage(D2x(RCVT + 256),8)) /* PW syntax rules     */ 
+RCVTSNT3 = Strip(Storage(D2x(RCVT + 266),8)) /* PW syntax rules     */ 
+RCVTSNT4 = Strip(Storage(D2x(RCVT + 276),8)) /* PW syntax rules     */ 
+RCVTSNT5 = Strip(Storage(D2x(RCVT + 286),8)) /* PW syntax rules     */ 
+RCVTSNT6 = Strip(Storage(D2x(RCVT + 296),8)) /* PW syntax rules     */ 
+RCVTSNT7 = Strip(Storage(D2x(RCVT + 306),8)) /* PW syntax rules     */ 
+RCVTSNT8 = Strip(Storage(D2x(RCVT + 316),8)) /* PW syntax rules     */ 
+say "Password syntax rules:"                                           
+select                                                                 
+   when c2x(RCVTSNT1) <> "0000000000000000" then                       
+       say " Rule 1:" RCVTSNT1                                         
+   when c2x(RCVTSNT2) <> "0000000000000000" then                       
+       say " Rule 2:" RCVTSNT2                                         
+   when c2x(RCVTSNT3) <> "0000000000000000" then                       
+       say " Rule 3:" RCVTSNT3                                         
+   when c2x(RCVTSNT4) <> "0000000000000000" then                       
+       say " Rule 4:" RCVTSNT4                                         
+   when c2x(RCVTSNT5) <> "0000000000000000" then                       
+       say " Rule 5:" RCVTSNT5                                         
+   when c2x(RCVTSNT6) <> "0000000000000000" then                       
+       say " Rule 6:" RCVTSNT6                                         
+   when c2x(RCVTSNT7) <> "0000000000000000" then                       
+       say " Rule 7:" RCVTSNT7                                         
+   when c2x(RCVTSNT8) <> "0000000000000000" then                       
+       say " Rule 8:" RCVTSNT8                                         
+  otherwise if c2x(RCVTSNT1) = "0000000000000000" then                 
+       say "Rule 1: ********"                                          
+end                                                                       
+say "LEGEND:",                                                         
+    "A-ALPHA C-CONSONANT L-ALPHANUM N-NUMERIC V-VOWEL W-NOVOWEL" ,     
+    "*-ANYTHING"                                                       
+/* the below is a bit broken as it only pulls out min and max        */
+/* values for the first password rule. needs work!                   */
+RCVTSLEN = C2D(Strip(Storage(D2x(RCVT + 244),1))) /* min pw length   */
+Say "Min password length:" RCVTSLEN                                    
+RCVTELEN = C2D(Strip(Storage(D2x(RCVT + 245),1))) /* max pw length   */
+Say "Max password length:" RCVTELEN                                    
 RCVTRVOK = C2D(Strip(Storage(D2x(RCVT + 241),1))) /* logon attempts  */ 
 Say "Invalid logon attempts allowed:" RCVTRVOK                          
 RCVTINAC = C2D(Strip(Storage(D2x(RCVT + 243),1))) /* inactive int    */ 
