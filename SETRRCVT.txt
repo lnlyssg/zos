@@ -68,7 +68,7 @@ say "LEGEND:",
     "*-ANYTHING"                                                        
 RCVTSLEN = C2D(Strip(Storage(D2x(RCVT + 244),1))) /* min pw length   */ 
 Say "Min password length:" RCVTSLEN                                     
-RCVTELEN = C2D(Strip(Storage(D2x(RCVT + 244),1))) /* max pw length   */ 
+RCVTELEN = C2D(Strip(Storage(D2x(RCVT + 245),1))) /* max pw length   */ 
 Say "Max password length:" RCVTELEN                                     
 RCVTRVOK = C2D(Strip(Storage(D2x(RCVT + 241),1))) /* logon attempts  */ 
 Say "Invalid logon attempts allowed:" RCVTRVOK                          
