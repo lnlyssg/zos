@@ -1,0 +1,65 @@
+/*REXX*/                                                                
+/* Work in progress rexx to pull out all useful SETROPTS info from   */
+/* storage                                                           */
+CVT      = C2d(Storage(10,4))                /* point to CVT         */ 
+CVTVERID = Storage(D2x(CVT - 24),16)         /* "user" software vers.*/ 
+PRODNAME = Storage(D2x(CVT - 40),7)          /* point to mvs version */ 
+CVTRAC   = C2d(Storage(D2x(CVT + 992),4))    /* point to RACF CVT    */ 
+RCVT     = CVTRAC                            /* use RCVT name        */ 
+RCVTID   = Storage(D2x(RCVT),4)              /* point to RCVTID      */ 
+                                             /* RCVT, ACF2, or RTSS  */ 
+SECNAM = RCVTID                              /* ACF2 SECNAME = RCVTID*/ 
+If RCVTID = 'RCVT' then SECNAM = 'RACF'      /* RCVT is RACF         */ 
+RACFVRM  = Storage(D2x(RCVT + 616),4)        /* RACF Ver/Rel/Mod     */ 
+RACFVER  = Substr(RACFVRM,1,1)               /* RACF Version         */ 
+RACFREL  = Substr(RACFVRM,2,2)               /* RACF Release         */ 
+If Bitand(CVTOSLV2,'01'x) <> '01'x then ,    /* below OS/390 R10     */ 
+  RACFREL  = Format(RACFREL)                 /* Remove leading 0     */ 
+RACFMOD  = Substr(RACFVRM,4,1)               /* RACF MOD level       */ 
+RACFLEV  = RACFVER || '.' || RACFREL || '.' || RACFMOD                  
+If RCVTID = 'RCVT' | RCVTID = 'RTSS' then ,                             
+ RCVTDSN = Strip(Storage(D2x(RCVT + 56),44))    /* RACF prim dsn     */ 
+                                                                        
+RCVTSNTX = Strip(Storage(D2x(RCVT + 244),10))  /* PW syntax rules  */   
+say "Password syntax rules:" RCVTSNTX                                   
+say "LEGEND:",                                                          
+    "A-ALPHA C-CONSONANT L-ALPHANUM N-NUMERIC V-VOWEL W-NOVOWEL" ,      
+RCVTRVOK = C2D(Strip(Storage(D2x(RCVT + 241),1))) /* logon attempts */  
+Say "Invalid logon attempts allowed:" RCVTRVOK                          
+RCVTINAC = C2D(Strip(Storage(D2x(RCVT + 243),1))) /* inactive int */    
+Say "Inactive interval:" RCVTINAC "days"                                
+/**/                                                                    
+                                                                        
+  RCVTDSDT  = C2d(Storage(D2x(RCVT + 224),4))  /* point to RACFDSDT*/   
+  DSDTNUM   = C2d(Storage(D2x(RCVTDSDT+4),4))  /* num RACF dsns    */   
+  DSDTPRIM  = Storage(D2x(RCVTDSDT+177),44)    /* point to prim ds */   
+  DSDTPRIM  = Strip(DSDTPRIM,'T')              /* del trail blanks */   
+  DSDTBACK  = Storage(D2x(RCVTDSDT+353),44)    /* point to back ds */   
+  DSDTBACK  = Strip(DSDTBACK,'T')              /* del trail blanks */   
+  Say   'The security software is' Word(PRODNAME,1) ,                   
+        'Security Server (RACF).' ,                                     
+        'The FMID is HRF' || RACFVRM || '.'                             
+  If DSDTNUM = 1 then                                                   
+    Say   '  The RACF primary data set is' DSDTPRIM'.'                  
+    Say   '  The RACF backup  data set is' DSDTBACK'.'                  
+RCVTUADS = Strip(Storage(D2x(RCVT + 100),44)) /* UADS dsn            */ 
+    say "The UADS dataset is:" RCVTUADS                                 
+                                                                        
+                                                                        
+/* Get the RVARY password info" */                                      
+RCVTSWPW = Strip(Storage(D2x(RCVT + 440),8))  /* rvary switch     */    
+if RCVTSWPW = "" then RCVTSWPW = "YES"                                  
+RCVTINPW = Strip(Storage(D2x(RCVT + 448),8))  /* rvary status     */    
+if RCVTINPW = "" then RCVTINPW = "YES"                                  
+say "RVARY Switch password DES hash:" c2x(RCVTSWPW)                     
+say "RVARY Status password DES hash:" c2x(RCVTINPW)                     
+/* ----------------------------------------------------------------- */ 
+/* See if new password exit is active.                                */
+/* ----------------------------------------------------------------- */ 
+pwx01hex = Storage(D2x(RCVT + 236),4)                                   
+RCVTPWDX = C2d(BITAND(pwx01hex,'7FFFFFFF'x))                            
+If RCVTPWDX = 0 Then                                                    
+  YesOrNo = 'is NOT'                                                    
+else                                                                    
+  YesOrNo = 'IS'                                                        
+say " There" YesOrNo "a new password exit (ICHPWX01) installed."        
