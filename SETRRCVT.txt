@@ -1,6 +1,6 @@
 /*REXX*/                                                               
 /*********************************************************************/
-/* Work in progress rexx to pull out all useful SETROPTS info from   */
+/* Work in progress Rexx to pull out all useful SETROPTS info from   */
 /* storage                                                           */
 /*                                                                   */
 /* Still to do:                                                      */
@@ -15,6 +15,8 @@
 /*            http://www.rsm.co.uk                                   */
 /*          z/OS Security Server RACF Data Areas manual:             */
 /*            http://publibz.boulder.ibm.com/epubs/pdf/ich2c400.pdf  */
+/*          Bruce Wells' XSETRPWD                                    */
+/*            ftp://public.dhe.ibm.com/s390/zos/racf/irrxutil/       */
 /*********************************************************************/
 /* Get info from storage, most of this section is a straight lift    */
 /* from IPLINFO!                                                     */
