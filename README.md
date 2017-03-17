@@ -1,9 +1,11 @@
 # z/OS
 #### Random mainframe stuff
 
+SETRRCVT - Rexx to pull out RACF SETROPTS info from storage without needing to have SPECIAL or AUDITOR. _work in progress_
+
 racf.rule - hashcat rule for cracking RACF passwords, probably needs more tweaking!
 
-MVS Control Blocks.txt - File for use in ISRDDN to make browsing storage easier. Based on [this](http://www.meerkatcomputerservices.com/mfblog/wp-content/uploads/2016/07/Browsing-MVS-Control-Blocks-Using-DDLIST.pdf) document.
+MVS Control Blocks.txt - File for use in ISRDDN to make browsing storage easier. Use in conjunction with [this](http://www.meerkatcomputerservices.com/mfblog/wp-content/uploads/2016/07/Browsing-MVS-Control-Blocks-Using-DDLIST.pdf) document.
 
 ## Other useful notes
 To find DES encrypted RVARY passwords in common storage:  

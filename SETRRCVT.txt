@@ -1,11 +1,23 @@
-/*REXX*/                                                                
-/* Work in progress rexx to pull out all useful SETROPTS info from   */
+/*REXX*/                                                               
+/*********************************************************************/
+/* Work in progress Rexx to pull out all useful SETROPTS info from   */
 /* storage                                                           */
 /*                                                                   */
 /* Still to do:                                                      */
+/* - Cater for multiple password rule settings                       */
 /* - Pull out PROTECT-ALL settings                                   */
-/* - Pull out Auditing options e.g. SAUDIT                           */
+/* - Pull out Auditing options e.g. SAUDIT, OPERAUDIT etc.           */
 /*                                                                   */
+/* Author:  Jim Taylor                                               */
+/*            https://github.com/jaytay79/zos                        */
+/*                                                                   */
+/* Sources: Mark Zelden's IPLINFO Rexx:                              */
+/*            http://www.mzelden.com/mvsfiles/iplinfo.txt            */
+/*          Mark Wilson's "RACF for Systems Programmers" course:     */
+/*            http://www.rsm.co.uk                                   */
+/*          z/OS Security Server RACF Data Areas manual:             */
+/*            http://publibz.boulder.ibm.com/epubs/pdf/ich2c400.pdf  */
+/*********************************************************************/
 CVT      = C2d(Storage(10,4))                /* point to CVT         */ 
 CVTVERID = Storage(D2x(CVT - 24),16)         /* "user" software vers.*/ 
 PRODNAME = Storage(D2x(CVT - 40),7)          /* point to mvs version */ 
@@ -39,14 +51,16 @@ RCVTDSN = Strip(Storage(D2x(RCVT + 56),44))  /* RACF prim dsn        */
   RCVTUADS = Strip(Storage(D2x(RCVT + 100),44)) /* UADS dsn          */ 
     say  '  The UADS dataset is' RCVTUADS'.'                             
                                                                         
-/* Get the RVARY password info" */                                      
-RCVTSWPW = Strip(Storage(D2x(RCVT + 440),8))  /* rvary switch pw     */    
-if RCVTSWPW = "" then RCVTSWPW = "YES"                                  
-RCVTINPW = Strip(Storage(D2x(RCVT + 448),8))  /* rvary status pw     */    
-if RCVTINPW = "" then RCVTINPW = "YES"                                  
-say "RVARY Switch password DES hash:" c2x(RCVTSWPW)                     
-say "RVARY Status password DES hash:" c2x(RCVTINPW)        
-/* Get password settings and other related settings */ 
+/* Get the RVARY password info" */                                     
+RCVTSWPW = Strip(Storage(D2x(RCVT + 440),8))  /* rvary switch pw     */
+if c2x(RCVTSWPW) = "0000000000000000" then                             
+ say "RVARY SWITCH password is set to default value of YES"            
+ else say "RVARY SWITCH password DES hash:" c2x(RCVTSWPW)              
+RCVTINPW = Strip(Storage(D2x(RCVT + 448),8))  /* rvary status pw     */
+if c2x(RCVTINPW) = "0000000000000000" then                             
+ say "RVARY STATUS password is set to default value of YES"            
+ else say "RVARY STATUS password DES hash:" c2x(RCVTINPW)                     
+/* Get password and other related settings */ 
 RCVTSNTX = Strip(Storage(D2x(RCVT + 244),10)) /* PW syntax rules     */   
 say "Password syntax rules:" RCVTSNTX                                   
 say "LEGEND:",                                                          
