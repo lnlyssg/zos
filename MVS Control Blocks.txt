@@ -1,0 +1,16 @@
+PSA        0.            The start
+CVT        10.?          Communications Vector Table
+RCVT       10.?+3E0?     RACF CVT
+RCVX       RCVT+258?     RACF CVT Extension
+PSCB       JSCB+108?     TSO Protected Step Control Block
+JSCB       TCB+B4?       Job/Step Control Block
+TCB        CVT??         Task Control Block
+UPT        PSCB+34?      User Profile Table
+SAFV       10.?+F8?      SAFV
+ASCB       PSA+224? Address Space Control Block (current) SQA IHAASCB
+ASXB       ASCB+6C?
+ACEE       ASXB+C8? Accessor Environment Elt (current) LSQA IHAACEE
+ACEX       ACEE+98? Acee extension (current) LSQA
+APHT       CSVT+C?+8? APF List
+ASCBJBNI   ASCB+AC? ASCB (Current) Batch Jobname (or zero)
+ASCBJBNS   ASCB+B0? ASCB (Current) Start/Mount/Logon
