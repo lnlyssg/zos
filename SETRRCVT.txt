@@ -1,6 +1,11 @@
 /*REXX*/                                                                
 /* Work in progress rexx to pull out all useful SETROPTS info from   */
 /* storage                                                           */
+/*                                                                   */
+/* Still to do:                                                      */
+/* - Pull out PROTECT-ALL settings                                   */
+/* - Pull out Auditing options e.g. SAUDIT                           */
+/*                                                                   */
 CVT      = C2d(Storage(10,4))                /* point to CVT         */ 
 CVTVERID = Storage(D2x(CVT - 24),16)         /* "user" software vers.*/ 
 PRODNAME = Storage(D2x(CVT - 40),7)          /* point to mvs version */ 
@@ -47,12 +52,18 @@ say "Password syntax rules:" RCVTSNTX
 say "LEGEND:",                                                          
     "A-ALPHA C-CONSONANT L-ALPHANUM N-NUMERIC V-VOWEL W-NOVOWEL" ,      
     "*-ANYTHING"                                                        
-RCVTRVOK = C2D(Strip(Storage(D2x(RCVT + 241),1))) /* logon attempts  */  
+RCVTSLEN = C2D(Strip(Storage(D2x(RCVT + 244),1))) /* min pw length   */ 
+Say "Min password length:" RCVTSLEN                                     
+RCVTELEN = C2D(Strip(Storage(D2x(RCVT + 244),1))) /* max pw length   */ 
+Say "Max password length:" RCVTELEN                                     
+RCVTRVOK = C2D(Strip(Storage(D2x(RCVT + 241),1))) /* logon attempts  */ 
 Say "Invalid logon attempts allowed:" RCVTRVOK                          
-RCVTINAC = C2D(Strip(Storage(D2x(RCVT + 243),1))) /* inactive int    */    
-Say "Inactive interval:" RCVTINAC "days"               
+RCVTINAC = C2D(Strip(Storage(D2x(RCVT + 243),1))) /* inactive int    */ 
+Say "Inactive interval:" RCVTINAC "days"                                
+RCVTHIST = C2D(Strip(Storage(D2x(RCVT + 240),1))) /* pw generations  */ 
+Say "Password generations:" RCVTHIST                                    
 /* ----------------------------------------------------------------- */ 
-/* See if new password exit is active.                               */
+/* See if new password exit is active.                               */ 
 /* ----------------------------------------------------------------- */ 
 pwx01hex = Storage(D2x(RCVT + 236),4)                                   
 RCVTPWDX = C2d(BITAND(pwx01hex,'7FFFFFFF'x))                            
