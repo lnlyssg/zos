@@ -80,6 +80,8 @@ if c2x(RCVTINPW) = "0000000000000000" then
  say "RVARY STATUS password is set to default value of YES"             
  else say "RVARY STATUS password DES hash:" c2x(RCVTINPW)               
 /* Get password and other related settings */                           
+  RCVTPINV  = C2d(Storage(D2x(RCVT + 155),1))  /* point to RCVTPINV  */
+  say "Global password change interval:" RCVTPINV "days"               
 /* it seems that if a rule is set to 8 "*"s then it defaults to     */  
 /* "0"s......                                                       */  
 RCVTSNT1 = Strip(Storage(D2x(RCVT + 246),8)) /* PW syntax rules     */  
