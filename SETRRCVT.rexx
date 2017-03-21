@@ -142,6 +142,17 @@ RCVTINAC = C2D(Strip(Storage(D2x(RCVT + 243),1))) /* inactive int    */
 Say "Inactive interval:" RCVTINAC "days"
 RCVTHIST = C2D(Strip(Storage(D2x(RCVT + 240),1))) /* pw generations  */
 Say "Password generations:" RCVTHIST
+/* Misc password related bit string flags */
+RCVTFLG3 = RCVx + 633                          /* point to RCVTFLG3  */
+RCVTFLGX = X2B(C2X(STORAGE(D2X(RCVTFLG3),8)))  /* get the bits       */
+if SUBSTR(RCVTFLGX,2,1) = 1 then say "Mixed case passwords enabled"
+ else say "Mixed case passwords disabled"
+if SUBSTR(RCVTFLGX,7,1) = 1 then say "Multi factor auth is enabled"
+ else say "Multi factor auth is disabled"
+/* Checks for new password encryption */
+RCVTPALG = C2D(Strip(Storage(D2x(RCVT + 635),1))) /* pw encryption   */
+if RCVTPALG = "1" then say "KDFAES encryption is active"
+ else say "Legacy encryption is active"
 /* ----------------------------------------------------------------- */
 /* See if new password exit is active.                               */
 /* ----------------------------------------------------------------- */
@@ -151,4 +162,4 @@ If RCVTPWDX = 0 Then
   YesOrNo = 'is NOT'
 else
   YesOrNo = 'IS'
-say " There" YesOrNo "a new password exit (ICHPWX01) installed."
+say "There" YesOrNo "a new password exit (ICHPWX01) installed."
