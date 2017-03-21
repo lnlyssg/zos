@@ -3,9 +3,6 @@
 /* Work in progress Rexx to pull out all useful SETROPTS info from   */
 /* storage. No SPECIAL or AUDITOR needed!                            */
 /*                                                                   */
-/* Still to do:                                                      */
-/* - Cater for multiple password rule settings                       */
-/*                                                                   */
 /* Author:  Jim Taylor                                               */
 /*            https://github.com/jaytay79/zos                        */
 /*                                                                   */
@@ -103,32 +100,79 @@ say "Global password change interval:" RCVTPINV "days"
 /* it seems that if a rule is set to 8 "*"s then it defaults to     */
 /* "0"s which is messy if said rule is active further down.....     */
 /* Needs some work to try and figure this out further!              */
-RCVTSNT1 = Strip(Storage(D2x(RCVT + 246),8)) /* PW syntax rules     */
-RCVTSNT2 = Strip(Storage(D2x(RCVT + 256),8)) /* PW syntax rules     */
-RCVTSNT3 = Strip(Storage(D2x(RCVT + 266),8)) /* PW syntax rules     */
-RCVTSNT4 = Strip(Storage(D2x(RCVT + 276),8)) /* PW syntax rules     */
-RCVTSNT5 = Strip(Storage(D2x(RCVT + 286),8)) /* PW syntax rules     */
-RCVTSNT6 = Strip(Storage(D2x(RCVT + 296),8)) /* PW syntax rules     */
-RCVTSNT7 = Strip(Storage(D2x(RCVT + 306),8)) /* PW syntax rules     */
-RCVTSNT8 = Strip(Storage(D2x(RCVT + 316),8)) /* PW syntax rules     */
+RCVTSNT1 = Strip(Storage(D2x(RCVT + 246),8))  /* PW syntax rule 1    */
+RCVTSNT1S = Strip(Storage(D2x(RCVT + 244),1)) /* rule 1 min          */
+RCVTSNT1E = Strip(Storage(D2x(RCVT + 245),1)) /* rule 1 max          */
+ RCVTSNT1 = pwcheck(RCVTSNT1,RCVTSNT1E)       /* check the rule      */
+RCVTSNT2 = Strip(Storage(D2x(RCVT + 256),8))  /* PW syntax rule 2    */
+RCVTSNT2S = Strip(Storage(D2x(RCVT + 254),1)) /* rule 2 min          */
+RCVTSNT2E = Strip(Storage(D2x(RCVT + 255),1)) /* rule 2 max          */
+ RCVTSNT2 = pwcheck(RCVTSNT2,RCVTSNT2E)       /* check the rule      */
+RCVTSNT3 = Strip(Storage(D2x(RCVT + 266),8))  /* PW syntax rule 3    */
+RCVTSNT3S = Strip(Storage(D2x(RCVT + 264),1)) /* rule 3 min          */
+RCVTSNT3E = Strip(Storage(D2x(RCVT + 265),1)) /* rule 3 max          */
+ RCVTSNT3 = pwcheck(RCVTSNT3,RCVTSNT3E)       /* check the rule      */
+RCVTSNT4 = Strip(Storage(D2x(RCVT + 276),8))  /* PW syntax rule 4    */
+RCVTSNT4S = Strip(Storage(D2x(RCVT + 274),1)) /* rule 4 min          */
+RCVTSNT4E = Strip(Storage(D2x(RCVT + 275),1)) /* rule 4 max          */
+ RCVTSNT4 = pwcheck(RCVTSNT4,RCVTSNT4E)       /* check the rule      */
+RCVTSNT5 = Strip(Storage(D2x(RCVT + 286),8))  /* PW syntax rule 5    */
+RCVTSNT5S = Strip(Storage(D2x(RCVT + 284),1)) /* rule 5 min          */
+RCVTSNT5E = Strip(Storage(D2x(RCVT + 285),1)) /* rule 5 max          */
+ RCVTSNT5 = pwcheck(RCVTSNT5,RCVTSNT5E)       /* check the rule      */
+RCVTSNT6 = Strip(Storage(D2x(RCVT + 296),8))  /* PW syntax rule 6    */
+RCVTSNT6S = Strip(Storage(D2x(RCVT + 294),1)) /* rule 6 min          */
+RCVTSNT6E = Strip(Storage(D2x(RCVT + 295),1)) /* rule 6 max          */
+ RCVTSNT6 = pwcheck(RCVTSNT6,RCVTSNT6E)       /* check the rule      */
+RCVTSNT7 = Strip(Storage(D2x(RCVT + 306),8))  /* PW syntax rule 7    */
+RCVTSNT7S = Strip(Storage(D2x(RCVT + 304),1)) /* rule 7 min          */
+RCVTSNT7E = Strip(Storage(D2x(RCVT + 305),1)) /* rule 7 max          */
+ RCVTSNT7 = pwcheck(RCVTSNT7,RCVTSNT7E)       /* check the rule      */
+RCVTSNT8 = Strip(Storage(D2x(RCVT + 316),8))  /* PW syntax rule 8    */
+RCVTSNT8S = Strip(Storage(D2x(RCVT + 314),1)) /* rule 8 min          */
+RCVTSNT8E = Strip(Storage(D2x(RCVT + 315),1)) /* rule 8 max          */
+ RCVTSNT8 = pwcheck(RCVTSNT8,RCVTSNT8E)       /* check the rule      */
 say "Password syntax rules:"
-if c2x(RCVTSNT1) <> "0000000000000000" then
+if c2x(RCVTSNT1E) <> "00" then do
   say " Rule 1:" RCVTSNT1
-else say " Rule 1: ********"
-if c2x(RCVTSNT2) <> "0000000000000000" then
+  Say "    Min length:" c2x(RCVTSNT1S)
+  Say "    Max length:" c2x(RCVTSNT1E)
+  end
+if c2x(RCVTSNT2E) <> "00" then do
   say " Rule 2:" RCVTSNT2
-if c2x(RCVTSNT3) <> "0000000000000000" then
+  Say "    Min length:" c2x(RCVTSNT2S)
+  Say "    Max length:" c2x(RCVTSNT2E)
+  end
+if c2x(RCVTSNT3E) <> "00" then do
   say " Rule 3:" RCVTSNT3
-if c2x(RCVTSNT4) <> "0000000000000000" then
+  Say "    Min length:" c2x(RCVTSNT3S)
+  Say "    Max length:" c2x(RCVTSNT3E)
+  end
+if c2x(RCVTSNT4E) <> "00" then do
   say " Rule 4:" RCVTSNT4
-if c2x(RCVTSNT5) <> "0000000000000000" then
+  Say "    Min length:" c2x(RCVTSNT4S)
+  Say "    Max length:" c2x(RCVTSNT4E)
+  end
+if c2x(RCVTSNT5E) <> "00" then do
   say " Rule 5:" RCVTSNT5
-if c2x(RCVTSNT6) <> "0000000000000000" then
+  Say "    Min length:" c2x(RCVTSNT5S)
+  Say "    Max length:" c2x(RCVTSNT5E)
+  end
+if c2x(RCVTSNT6E) <> "00" then do
   say " Rule 6:" RCVTSNT6
-if c2x(RCVTSNT7) <> "0000000000000000" then
+  Say "    Min length:" c2x(RCVTSNT6S)
+  Say "    Max length:" c2x(RCVTSNT6E)
+  end
+if c2x(RCVTSNT7E) <> "00" then do
   say " Rule 7:" RCVTSNT7
-if c2x(RCVTSNT8) <> "0000000000000000" then
+  Say "    Min length:" c2x(RCVTSNT7S)
+  Say "    Max length:" c2x(RCVTSNT7E)
+  end
+if c2x(RCVTSNT8E) <> "00" then do
   say " Rule 8:" RCVTSNT8
+  Say "    Min length:" c2x(RCVTSNT8S)
+  Say "    Max length:" c2x(RCVTSNT8E)
+  end
 say "LEGEND:",
     "A-ALPHA C-CONSONANT L-ALPHANUM N-NUMERIC V-VOWEL W-NOVOWEL" ,
     "*-ANYTHING c-MIXED CONSONANT m-MIXED NUMERIC v-MIXED VOWEL",
@@ -136,9 +180,9 @@ say "LEGEND:",
 /* the below is a bit broken as it only pulls out min and max        */
 /* values for the first password rule. needs work!                   */
 RCVTSLEN = C2D(Strip(Storage(D2x(RCVT + 244),1))) /* min pw length   */
-Say "Min password length:" RCVTSLEN
+Say "Minimum possible password length:" RCVTSLEN
 RCVTELEN = C2D(Strip(Storage(D2x(RCVT + 245),1))) /* max pw length   */
-Say "Max password length:" RCVTELEN
+Say "Maximum possible password length:" RCVTELEN
 RCVTRVOK = C2D(Strip(Storage(D2x(RCVT + 241),1))) /* logon attempts  */
 Say "Invalid logon attempts allowed:" RCVTRVOK
 RCVTINAC = C2D(Strip(Storage(D2x(RCVT + 243),1))) /* inactive int    */
@@ -172,3 +216,10 @@ If RCVTPWDX = 0 Then
 else
   YesOrNo = 'IS'
 say "There" YesOrNo "a new password exit (ICHPWX01) installed."
+exit
+
+/* pwcheck function to check for an empty rule but with a max length */
+pwcheck: parse arg pw length
+if c2x(pw) = "0000000000000000" & c2x(length) <> "00" then
+ return "********"
+ else return pw
