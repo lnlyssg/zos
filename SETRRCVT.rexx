@@ -51,7 +51,7 @@ RCVTDSN = Strip(Storage(D2x(RCVT + 56),44))  /* RACF prim dsn        */
     Say  '  The RACF backup  data set is' DSDTBACK'.'
   RCVTUADS = Strip(Storage(D2x(RCVT + 100),44)) /* UADS dsn          */
     say  '  The UADS dataset is' RCVTUADS'.'
-
+say ""
 /* Below sections pulls in bit string values for various settings    */
 RCVTPRO  = RCVx + 393                          /* point to RCVTPRO   */
 RCVTEROP = RCVx + 154                          /* point to RCVTEROP  */
@@ -59,8 +59,9 @@ RCVTAUOP = RCVx + 151                          /* point to RCVTAUOP  */
 RCVTPROX = X2B(C2X(STORAGE(D2X(RCVTPRO),4)))   /* get the bits       */
 RCVTEROX = X2B(C2X(STORAGE(D2X(RCVTEROP),4)))  /* get the bits       */
 RCVTAUOX = X2B(C2X(STORAGE(D2X(RCVTAUOP),8)))  /* get the bits       */
-if substr(RCVTEROX,3,1) = 0 then say "CMDVIOL is on"
- else say "CMDVIOL is off"
+if substr(RCVTEROX,3,1) = 0 then
+ say "RACF Command violations are logged"
+ else say "RACF Command violations are not logged"
 if SUBSTR(RCVTPROX,1,1) = 1 then say "PROTECT-ALL is on"
  else say "PROTECT-ALL is off"
 if SUBSTR(RCVTPROX,2,1) = 1 then say "PROTECT-ALL WARNING mode"
@@ -85,6 +86,7 @@ if substr(RCVTEROX,4,1) = 0 then say "SPECIAL users are audited"
  else say "SPECIAL users are not audited"
 if SUBSTR(RCVTAUOX,8,1) = 1 then say "OPERATIONS users are audited"
  else say "OPERATIONS users are not audited"
+say ""
 /* Get the RVARY password info */
 RCVTSWPW = Strip(Storage(D2x(RCVT + 440),8))  /* rvary switch pw     */
 if c2x(RCVTSWPW) = "0000000000000000" then
@@ -94,6 +96,7 @@ RCVTINPW = Strip(Storage(D2x(RCVT + 448),8))  /* rvary status pw     */
 if c2x(RCVTINPW) = "0000000000000000" then
  say "RVARY STATUS password is set to default value of YES"
  else say "RVARY STATUS password DES hash:" c2x(RCVTINPW)
+say ""
 /* Get password and other related settings */
 RCVTPINV  = C2d(Storage(D2x(RCVT + 155),1))  /* point to RCVTPINV   */
 say "Global password change interval:" RCVTPINV "days"
@@ -147,6 +150,12 @@ RCVTFLG3 = RCVx + 633                          /* point to RCVTFLG3  */
 RCVTFLGX = X2B(C2X(STORAGE(D2X(RCVTFLG3),8)))  /* get the bits       */
 if SUBSTR(RCVTFLGX,2,1) = 1 then say "Mixed case passwords enabled"
  else say "Mixed case passwords disabled"
+if SUBSTR(RCVTFLGX,5,1) = 1 then
+ say "Special characters are allowed in passwords"
+ else say "Special characters are not allowed in passwords"
+if SUBSTR(RCVTFLGX,6,1) = 1 then
+ say "Enhanced password options under OA43999 are available"
+ else say "Enhanced password options under OA43999 are not available"
 if SUBSTR(RCVTFLGX,7,1) = 1 then say "Multi factor auth is enabled"
  else say "Multi factor auth is disabled"
 /* Checks for new password encryption */
