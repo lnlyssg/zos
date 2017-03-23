@@ -200,8 +200,8 @@ if SUBSTR(RCVTFLGX,5,1) = 1 then
 if SUBSTR(RCVTFLGX,6,1) = 1 then
  say "Enhanced password options under OA43999 are available"
  else say "Enhanced password options under OA43999 are not available"
-if SUBSTR(RCVTFLGX,7,1) = 1 then say "Multi factor auth is enabled"
- else say "Multi factor auth is disabled"
+if SUBSTR(RCVTFLGX,7,1) = 1 then say "Multi factor auth is available"
+ else say "Multi factor auth is not available"
 /* Checks for new password encryption */
 RCVTPALG = C2D(Strip(Storage(D2x(RCVT + 635),1))) /* pw encryption   */
 if RCVTPALG = "1" then say "KDFAES encryption is active"
