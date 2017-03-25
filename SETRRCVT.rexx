@@ -59,10 +59,12 @@ RCVTAUOX = X2B(C2X(STORAGE(D2X(RCVTAUOP),8)))  /* get the bits       */
 if substr(RCVTEROX,3,1) = 0 then
  say "RACF Command violations are logged"
  else say "RACF Command violations are not logged"
-if SUBSTR(RCVTPROX,1,1) = 1 then say "PROTECT-ALL is on"
+if SUBSTR(RCVTPROX,1,1) = 1 then do
+  say "PROTECT-ALL is on"
+  if SUBSTR(RCVTPROX,2,1) = 1 then say "PROTECT-ALL WARNING mode"
+    else say "PROTECT-ALL FAILURE mode"
+  end
  else say "PROTECT-ALL is off"
-if SUBSTR(RCVTPROX,2,1) = 1 then say "PROTECT-ALL WARNING mode"
-else say "PROTECT-ALL FAILURE mode"
 if SUBSTR(RCVTPROX,3,1) = 1 then say "ERASE-ON-SCRATCH is on"
  else say "ERASE-ON-SCRATCH is off"
 if SUBSTR(RCVTPROX,4,1) = 1 then say "ERASE-ON-SCRATCH BY SECLEVEL on"
@@ -173,20 +175,30 @@ if c2x(RCVTSNT8E) <> "00" then do
   Say "    Min length:" c2x(RCVTSNT8S)
   Say "    Max length:" c2x(RCVTSNT8E)
   end
-say "LEGEND:",
+if c2x(RCVTSNT1E) = "00" & c2x(RCVTSNT2E) = "00",
+   & c2x(RCVTSNT3E) = "00" & c2x(RCVTSNT4E) = "00",
+   & c2x(RCVTSNT5E) = "00" & c2x(RCVTSNT6E) = "00",
+   & c2x(RCVTSNT7E) = "00" & c2x(RCVTSNT8E) = "00",
+   then  say "No password rules defined!"
+else say "LEGEND:",
     "A-ALPHA C-CONSONANT L-ALPHANUM N-NUMERIC V-VOWEL W-NOVOWEL" ,
     "*-ANYTHING c-MIXED CONSONANT m-MIXED NUMERIC v-MIXED VOWEL",
     "$-NATIONAL"
 /* the below is a bit broken as it only pulls out min and max        */
 /* values for the first password rule. needs work!                   */
 RCVTSLEN = C2D(Strip(Storage(D2x(RCVT + 244),1))) /* min pw length   */
+if RCVTSLEN = 0 then RCVTSLEN = 1
 Say "Minimum possible password length:" RCVTSLEN
 RCVTELEN = C2D(Strip(Storage(D2x(RCVT + 245),1))) /* max pw length   */
+if RCVTELEN = 0 then RCVTELEN = 8
 Say "Maximum possible password length:" RCVTELEN
 RCVTRVOK = C2D(Strip(Storage(D2x(RCVT + 241),1))) /* logon attempts  */
+if RCVTRVOK = 0 then RCVTRVOK = "unlimited"
 Say "Invalid logon attempts allowed:" RCVTRVOK
 RCVTINAC = C2D(Strip(Storage(D2x(RCVT + 243),1))) /* inactive int    */
-Say "Inactive interval:" RCVTINAC "days"
+if RCVTINAC = "0" then
+ say "No inactive interval"
+ else say "Inactive interval:" RCVTINAC "days"
 RCVTHIST = C2D(Strip(Storage(D2x(RCVT + 240),1))) /* pw generations  */
 Say "Password generations:" RCVTHIST
 /* Misc password related bit string flags */
