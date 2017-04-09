@@ -2,7 +2,7 @@
 
 ### Rexxes
 
-[SETRRCVT](https://github.com/jaytay79/zos/blob/master/SETRRCVT.rexx) - Rexx to pull out RACF SETROPTS info from storage without needing to have SPECIAL or AUDITOR. _work in progress. Any comments or additions gratefully received!_  
+[SETRRCVT](https://github.com/jaytay79/zos/blob/master/SETRRCVT.rexx) - Rexx to pull out RACF SETROPTS info from storage without needing to have SPECIAL or AUDITOR. _Any comments or additions gratefully received!_  
 
 [GENPW](https://github.com/jaytay79/zos/blob/master/GENPW.rexx) - Rexx to generate random passwords.
 
