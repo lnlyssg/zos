@@ -1,7 +1,7 @@
 /*REXX*/
 /*********************************************************************/
-/* Work in progress Rexx to pull out all useful SETROPTS info from   */
-/* storage. No SPECIAL or AUDITOR needed!                            */
+/* Rexx to pull out all useful SETROPTS info from storage.           */
+/* No SPECIAL or AUDITOR needed!                                     */
 /*                                                                   */
 /* Author:  Jim Taylor                                               */
 /*            https://github.com/jaytay79/zos                        */
@@ -99,9 +99,10 @@ say ""
 /* Get password and other related settings */
 RCVTPINV  = C2d(Storage(D2x(RCVT + 155),1))  /* point to RCVTPINV   */
 say "Global password change interval:" RCVTPINV "days"
-/* it seems that if a rule is set to 8 "*"s then it defaults to     */
-/* "0"s which is messy if said rule is active further down.....     */
-/* Needs some work to try and figure this out further!              */
+/* Note that if a rule is set to 8 "*"s then it defaults to "0"s    */
+/* which means the rule appears blank.                              */
+/* Workaround for this is to look at the max length of each rule to */
+/* see if it is truly a blank rule line or not!                     */
 RCVTSNT1 = Strip(Storage(D2x(RCVT + 246),8))  /* PW syntax rule 1    */
 RCVTSNT1S = Strip(Storage(D2x(RCVT + 244),1)) /* rule 1 min          */
 RCVTSNT1E = Strip(Storage(D2x(RCVT + 245),1)) /* rule 1 max          */
@@ -179,23 +180,21 @@ if c2x(RCVTSNT1E) = "00" & c2x(RCVTSNT2E) = "00",
    & c2x(RCVTSNT3E) = "00" & c2x(RCVTSNT4E) = "00",
    & c2x(RCVTSNT5E) = "00" & c2x(RCVTSNT6E) = "00",
    & c2x(RCVTSNT7E) = "00" & c2x(RCVTSNT8E) = "00",
-   then  say "No password rules defined!"
+   then  say " ** No password rules defined! **"
 else say "LEGEND:",
     "A-ALPHA C-CONSONANT L-ALPHANUM N-NUMERIC V-VOWEL W-NOVOWEL" ,
     "*-ANYTHING c-MIXED CONSONANT m-MIXED NUMERIC v-MIXED VOWEL",
     "$-NATIONAL"
-/* the below is a bit broken as it only pulls out min and max        */
-/* values for the first password rule. needs work!                   */
-RCVTSLEN = C2D(Strip(Storage(D2x(RCVT + 244),1))) /* min pw length   */
-if RCVTSLEN = 0 then RCVTSLEN = 1
+RCVTSLEN = C2D(Strip(Storage(D2x(RCVT + 244),1))) /* min possible    */
+if RCVTSLEN = 0 then RCVTSLEN = 1                 /* password length */
 Say "Minimum possible password length:" RCVTSLEN
-RCVTELEN = C2D(Strip(Storage(D2x(RCVT + 245),1))) /* max pw length   */
-if RCVTELEN = 0 then RCVTELEN = 8
+RCVTELEN = C2D(Strip(Storage(D2x(RCVT + 245),1))) /* max possible    */
+if RCVTELEN = 0 then RCVTELEN = 8                 /* password length */
 Say "Maximum possible password length:" RCVTELEN
 RCVTRVOK = C2D(Strip(Storage(D2x(RCVT + 241),1))) /* logon attempts  */
 if RCVTRVOK = 0 then RCVTRVOK = "unlimited"
 Say "Invalid logon attempts allowed:" RCVTRVOK
-RCVTINAC = C2D(Strip(Storage(D2x(RCVT + 243),1))) /* inactive int    */
+RCVTINAC = C2D(Strip(Storage(D2x(RCVT + 243),1))) /* inactive intvl  */
 if RCVTINAC = "0" then
  say "No inactive interval"
  else say "Inactive interval:" RCVTINAC "days"
