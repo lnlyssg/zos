@@ -15,6 +15,7 @@
 /*          Bruce Wells' XSETRPWD                                    */
 /*            ftp://public.dhe.ibm.com/s390/zos/racf/irrxutil/       */
 /*********************************************************************/
+numeric digits 20
 /* Get info from storage, most of this section is a straight lift    */
 /* from IPLINFO!                                                     */
 CVT      = C2d(Storage(10,4))                /* point to CVT         */
@@ -49,7 +50,7 @@ RCVTDSN = Strip(Storage(D2x(RCVT + 56),44))  /* RACF prim dsn        */
   RCVTUADS = Strip(Storage(D2x(RCVT + 100),44)) /* UADS dsn          */
     say  '  The UADS dataset is' RCVTUADS'.'
 say ""
-/* Below sections pulls in bit string values for various settings    */
+/* Below section pulls in bit string values for various settings     */
 RCVTPRO  = RCVx + 393                          /* point to RCVTPRO   */
 RCVTEROP = RCVx + 154                          /* point to RCVTEROP  */
 RCVTAUOP = RCVx + 151                          /* point to RCVTAUOP  */
@@ -61,20 +62,25 @@ if substr(RCVTEROX,3,1) = 0 then
  else say "RACF Command violations are not logged"
 if SUBSTR(RCVTPROX,1,1) = 1 then do
   say "PROTECT-ALL is on"
-  if SUBSTR(RCVTPROX,2,1) = 1 then say "PROTECT-ALL WARNING mode"
-    else say "PROTECT-ALL FAILURE mode"
+  if SUBSTR(RCVTPROX,2,1) = 1 then say " PROTECT-ALL WARNING mode"
+    else say " PROTECT-ALL FAILURE mode"
   end
  else say "PROTECT-ALL is off"
-if SUBSTR(RCVTPROX,3,1) = 1 then say "ERASE-ON-SCRATCH is on"
+if SUBSTR(RCVTPROX,3,1) = 1 then do
+  say "ERASE-ON-SCRATCH is active, current options:"
+  if SUBSTR(RCVTPROX,4,1) = 1 then say " ERASE-ON-SCRATCH BY SECLEVEL is on"
+    else say " ERASE-ON-SCRATCH BY SECLEVEL is off"
+  if SUBSTR(RCVTPROX,5,1) = 1 then say " ERASE-ON-SCRATCH for all",
+     "datasets is on"
+    else say " ERASE-ON-SCRATCH for all datasets is off"
+ end
  else say "ERASE-ON-SCRATCH is off"
-if SUBSTR(RCVTPROX,4,1) = 1 then say "ERASE-ON-SCRATCH BY SECLEVEL on"
- else say "ERASE-ON-SCRATCH BY SECLEVEL off"
 if SUBSTR(RCVTAUOX,2,1) = 1 then say "GROUP changes are audited"
- else say "Group changes are not audited"
+ else say "GROUP changes are not audited"
 if SUBSTR(RCVTAUOX,3,1) = 1 then say "USER changes are audited"
- else say "User changes are not audited"
+ else say "USER changes are not audited"
 if SUBSTR(RCVTAUOX,4,1) = 1 then say "DATASET changes are audited"
- else say "Dataset changes are not audited"
+ else say "DATASET changes are not audited"
 if SUBSTR(RCVTAUOX,5,1) = 1 then say "DASDVOL changes are audited"
  else say "DASDVOL changes are not audited"
 if SUBSTR(RCVTAUOX,6,1) = 1 then say "TAPEVOL changes are audited"
@@ -84,7 +90,7 @@ if SUBSTR(RCVTAUOX,7,1) = 1 then say "TERMINAL changes are audited"
 if substr(RCVTEROX,4,1) = 0 then say "SPECIAL users are audited"
  else say "SPECIAL users are not audited"
 if SUBSTR(RCVTAUOX,8,1) = 1 then say "OPERATIONS users are audited"
- else say "OPERATIONS users are not audited"
+ else say "OPERATIONS users are NOT audited"
 say ""
 /* Get the RVARY password info */
 RCVTSWPW = Strip(Storage(D2x(RCVT + 440),8))  /* rvary switch pw     */
@@ -106,35 +112,35 @@ say "Global password change interval:" RCVTPINV "days"
 RCVTSNT1 = Strip(Storage(D2x(RCVT + 246),8))  /* PW syntax rule 1    */
 RCVTSNT1S = Strip(Storage(D2x(RCVT + 244),1)) /* rule 1 min          */
 RCVTSNT1E = Strip(Storage(D2x(RCVT + 245),1)) /* rule 1 max          */
- RCVTSNT1 = pwcheck(RCVTSNT1,RCVTSNT1E)       /* check the rule      */
+ RCVTSNT1 = pwcheck(RCVTSNT1,RCVTSNT1E)       /* check rule 1        */
 RCVTSNT2 = Strip(Storage(D2x(RCVT + 256),8))  /* PW syntax rule 2    */
 RCVTSNT2S = Strip(Storage(D2x(RCVT + 254),1)) /* rule 2 min          */
 RCVTSNT2E = Strip(Storage(D2x(RCVT + 255),1)) /* rule 2 max          */
- RCVTSNT2 = pwcheck(RCVTSNT2,RCVTSNT2E)       /* check the rule      */
+ RCVTSNT2 = pwcheck(RCVTSNT2,RCVTSNT2E)       /* check rule 2        */
 RCVTSNT3 = Strip(Storage(D2x(RCVT + 266),8))  /* PW syntax rule 3    */
 RCVTSNT3S = Strip(Storage(D2x(RCVT + 264),1)) /* rule 3 min          */
 RCVTSNT3E = Strip(Storage(D2x(RCVT + 265),1)) /* rule 3 max          */
- RCVTSNT3 = pwcheck(RCVTSNT3,RCVTSNT3E)       /* check the rule      */
+ RCVTSNT3 = pwcheck(RCVTSNT3,RCVTSNT3E)       /* check rule 3        */
 RCVTSNT4 = Strip(Storage(D2x(RCVT + 276),8))  /* PW syntax rule 4    */
 RCVTSNT4S = Strip(Storage(D2x(RCVT + 274),1)) /* rule 4 min          */
 RCVTSNT4E = Strip(Storage(D2x(RCVT + 275),1)) /* rule 4 max          */
- RCVTSNT4 = pwcheck(RCVTSNT4,RCVTSNT4E)       /* check the rule      */
+ RCVTSNT4 = pwcheck(RCVTSNT4,RCVTSNT4E)       /* check rule 4        */
 RCVTSNT5 = Strip(Storage(D2x(RCVT + 286),8))  /* PW syntax rule 5    */
 RCVTSNT5S = Strip(Storage(D2x(RCVT + 284),1)) /* rule 5 min          */
 RCVTSNT5E = Strip(Storage(D2x(RCVT + 285),1)) /* rule 5 max          */
- RCVTSNT5 = pwcheck(RCVTSNT5,RCVTSNT5E)       /* check the rule      */
+ RCVTSNT5 = pwcheck(RCVTSNT5,RCVTSNT5E)       /* check rule 5        */
 RCVTSNT6 = Strip(Storage(D2x(RCVT + 296),8))  /* PW syntax rule 6    */
 RCVTSNT6S = Strip(Storage(D2x(RCVT + 294),1)) /* rule 6 min          */
 RCVTSNT6E = Strip(Storage(D2x(RCVT + 295),1)) /* rule 6 max          */
- RCVTSNT6 = pwcheck(RCVTSNT6,RCVTSNT6E)       /* check the rule      */
+ RCVTSNT6 = pwcheck(RCVTSNT6,RCVTSNT6E)       /* check rule 6        */
 RCVTSNT7 = Strip(Storage(D2x(RCVT + 306),8))  /* PW syntax rule 7    */
 RCVTSNT7S = Strip(Storage(D2x(RCVT + 304),1)) /* rule 7 min          */
 RCVTSNT7E = Strip(Storage(D2x(RCVT + 305),1)) /* rule 7 max          */
- RCVTSNT7 = pwcheck(RCVTSNT7,RCVTSNT7E)       /* check the rule      */
+ RCVTSNT7 = pwcheck(RCVTSNT7,RCVTSNT7E)       /* check rule 7        */
 RCVTSNT8 = Strip(Storage(D2x(RCVT + 316),8))  /* PW syntax rule 8    */
 RCVTSNT8S = Strip(Storage(D2x(RCVT + 314),1)) /* rule 8 min          */
 RCVTSNT8E = Strip(Storage(D2x(RCVT + 315),1)) /* rule 8 max          */
- RCVTSNT8 = pwcheck(RCVTSNT8,RCVTSNT8E)       /* check the rule      */
+ RCVTSNT8 = pwcheck(RCVTSNT8,RCVTSNT8E)       /* check rule 8        */
 say "Password syntax rules:"
 if c2x(RCVTSNT1E) <> "00" then do
   say " Rule 1:" RCVTSNT1
@@ -181,10 +187,10 @@ if c2x(RCVTSNT1E) = "00" & c2x(RCVTSNT2E) = "00",
    & c2x(RCVTSNT5E) = "00" & c2x(RCVTSNT6E) = "00",
    & c2x(RCVTSNT7E) = "00" & c2x(RCVTSNT8E) = "00",
    then  say " ** No password rules defined! **"
-else say "LEGEND:",
+else say " LEGEND:",
     "A-ALPHA C-CONSONANT L-ALPHANUM N-NUMERIC V-VOWEL W-NOVOWEL" ,
-    "*-ANYTHING c-MIXED CONSONANT m-MIXED NUMERIC v-MIXED VOWEL",
-    "$-NATIONAL"
+    "*-ANYTHING  c-MIXED CONSONANT m-MIXED NUMERIC v-MIXED VOWEL",
+    "$-NATIONAL s-SPECIAL"
 RCVTSLEN = C2D(Strip(Storage(D2x(RCVT + 244),1))) /* min possible    */
 if RCVTSLEN = 0 then RCVTSLEN = 1                 /* password length */
 Say "Minimum possible password length:" RCVTSLEN
@@ -199,7 +205,9 @@ if RCVTINAC = "0" then
  say "No inactive interval"
  else say "Inactive interval:" RCVTINAC "days"
 RCVTHIST = C2D(Strip(Storage(D2x(RCVT + 240),1))) /* pw generations  */
-Say "Password generations:" RCVTHIST
+if RCVTHIST = "0" then
+ say "No password history in use"
+ else say "Password generations:" RCVTHIST
 /* Misc password related bit string flags */
 RCVTFLG3 = RCVx + 633                          /* point to RCVTFLG3  */
 RCVTFLGX = X2B(C2X(STORAGE(D2X(RCVTFLG3),8)))  /* get the bits       */
