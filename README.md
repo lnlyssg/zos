@@ -8,6 +8,8 @@
 
 ### Random stuff
 
+[CARLaPSW](https://github.com/jaytay79/zos/blob/master/CARLaPSW.txt) - Do you have zSecure installed and have READ access to the RACF database? Then here's a quick and easy piece of CARLa to pull out all the password hashes and write them out in either JohnTheRipper or Hashcat formats. Run from zSecure menu CO.C or in batch.  
+
 [Cracking RACF passwords with hashcat](https://github.com/jaytay79/zos/wiki/hashcat-commands-for-RACF-passwords)
 
 [racf.rule](https://github.com/jaytay79/zos/blob/master/racf.rule) - for use with the above - based on best64.rule with some minor changes, could do with more tweaking!
