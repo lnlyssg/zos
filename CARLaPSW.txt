@@ -1,6 +1,6 @@
 /* CARLa to pull out password hashes from a RACF DB and write out     */
 /* results in JohnTheRipper and/or Hashcat formats. Just delete       */
-/* line 8 or 10 to suit your needs.                                   */
+/* line 10 or 12 to suit your needs.                                  */
 /*                                                                    */
 /* Requires a RACF database to be allocated in SE.1 - will not work   */
 /* with a zSecure unload.                                             */
