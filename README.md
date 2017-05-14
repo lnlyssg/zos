@@ -8,7 +8,9 @@
 
 ### Random stuff
 
-[CARLaPSW](https://github.com/jaytay79/zos/blob/master/CARLaPSW.txt) - Do you have zSecure installed and have READ access to the RACF database? Then here's a quick and easy piece of CARLa to pull out all the password hashes and write them out in either JohnTheRipper or Hashcat formats. Run from zSecure menu CO.C or in batch.  
+[CARLaPSW](https://github.com/jaytay79/zos/blob/master/CARLaPSW.txt) - Do you have zSecure installed and have READ access to the RACF database? Then here's a quick and easy piece of CARLa to pull out all the password hashes and write them out in either JohnTheRipper or Hashcat formats. Run from zSecure menu CO.C or in batch. See comments in the code for more detail.    
+
+Note for RACF admins: Define `XFACILIT` profiles of `CKG.CMD.FIELD.PASSWORD` and `CKG.CMD.FIELD.PWDX` with `UACC(NONE)` to prevent this from working.  
 
 [Cracking RACF passwords with hashcat](https://github.com/jaytay79/zos/wiki/hashcat-commands-for-RACF-passwords)
 
@@ -18,7 +20,7 @@
 
 
 ## Other useful notes
-To find DES encrypted RVARY passwords in common storage:  
+This is also included in SETRRCVT but to find the DES encrypted RVARY passwords in common storage:  
 
 ```
 TSO ISRDDN  
