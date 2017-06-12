@@ -35,19 +35,36 @@ RACFMOD  = Substr(RACFVRM,4,1)               /* RACF MOD level       */
 RACFLEV  = RACFVER || '.' || RACFREL || '.' || RACFMOD
 RCVTDSN = Strip(Storage(D2x(RCVT + 56),44))  /* RACF prim dsn        */
 
+  Say   'The security software is' Word(PRODNAME,1) ,
+        'Security Server (RACF).' ,
+        'The FMID is HRF' || RACFVRM || '.'
+  say ' '
   RCVTDSDT  = C2d(Storage(D2x(RCVT + 224),4))  /* point to RACFDSDT  */
   DSDTNUM   = C2d(Storage(D2x(RCVTDSDT+4),4))  /* num RACF dsns      */
   DSDTPRIM  = Storage(D2x(RCVTDSDT+177),44)    /* point to prim ds   */
   DSDTPRIM  = Strip(DSDTPRIM,'T')              /* del trail blanks   */
   DSDTBACK  = Storage(D2x(RCVTDSDT+353),44)    /* point to back ds   */
   DSDTBACK  = Strip(DSDTBACK,'T')              /* del trail blanks   */
-  Say   'The security software is' Word(PRODNAME,1) ,
-        'Security Server (RACF).' ,
-        'The FMID is HRF' || RACFVRM || '.'
-  If DSDTNUM = 1 then
-    Say  '  The RACF primary data set is' DSDTPRIM'.'
-    Say  '  The RACF backup  data set is' DSDTBACK'.'
-  RCVTUADS = Strip(Storage(D2x(RCVT + 100),44)) /* UADS dsn          */
+  If DSDTNUM = 1 then do
+     say '  The RACF primary data set is' DSDTPRIM'.'
+     say '  The RACF backup  data set is' DSDTBACK'.'
+   End
+   Else do
+     say '  RACF is using a split database. There are' DSDTNUM ,
+           'pairs of RACF data sets:'
+     RDTOFF = 0                            /* init cur offset to 0 */
+     DSDTENTY_SIZE = 352                   /* dsdtenty size        */
+     Do RDSNS = 1 to DSDTNUM
+       DSDTPRIM  = Storage(D2x(RCVTDSDT+177+RDTOFF),44) /* prim dsn */
+       DSDTPRIM  = Strip(DSDTPRIM,'T')                  /* del blnks*/
+       DSDTBACK  = Storage(D2x(RCVTDSDT+353+RDTOFF),44) /* bkup dsn */
+       DSDTBACK  = Strip(DSDTBACK,'T')                  /* del blnks*/
+       RDTOFF = RDTOFF + DSDTENTY_SIZE            /* next tbl entry */
+       say '    Primary #'RDSNS' - ' DSDTPRIM
+       say '    Backup  #'RDSNS' - ' DSDTBACK
+     End  /* do RDSNS = 1 to DSDTNUM */
+   End
+
     say  '  The UADS dataset is' RCVTUADS'.'
 say ""
 /* Below section pulls in bit string values for various settings     */
@@ -207,7 +224,7 @@ if RCVTINAC = "0" then
 RCVTHIST = C2D(Strip(Storage(D2x(RCVT + 240),1))) /* pw generations  */
 if RCVTHIST = "0" then
  say "No password history in use"
- else say "Password generations:" RCVTHIST
+ else say "Password history:" RCVTHIST "generations"
 /* Misc password related bit string flags */
 RCVTFLG3 = RCVx + 633                          /* point to RCVTFLG3  */
 RCVTFLGX = X2B(C2X(STORAGE(D2X(RCVTFLG3),8)))  /* get the bits       */
@@ -221,10 +238,10 @@ if SUBSTR(RCVTFLGX,6,1) = 1 then
  else say "Enhanced password options under OA43999 are not available"
 if SUBSTR(RCVTFLGX,7,1) = 1 then say "Multi factor auth is available"
  else say "Multi factor auth is not available"
-RCVTFLG4 = RCVx + 640                          /* point to RCVTFLG4  */
-RCVTFLGY = X2B(C2X(STORAGE(D2X(RCVTFLG4),8)))  /* get the bits       */
+RCVTFLG4 = RCVx + 640                          /* point to RCVTFLG4  */
+RCVTFLGY = X2B(C2X(STORAGE(D2X(RCVTFLG4),8)))  /* get the bits       */
 if SUBSTR(RCVTFLGY,2,1) = 1 then say " MFA3 is available (OA50930)"
-else say " MFA3 is not available (OA50930)"
+ else say " MFA3 is not available (OA50930)"
 /* Checks for new password encryption */
 RCVTPALG = C2D(Strip(Storage(D2x(RCVT + 635),1))) /* pw encryption   */
 if RCVTPALG = "1" then say "KDFAES encryption is active"
