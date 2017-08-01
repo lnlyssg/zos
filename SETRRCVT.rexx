@@ -256,6 +256,31 @@ If RCVTPWDX = 0 Then
 else
   YesOrNo = 'IS'
 say "There" YesOrNo "a new password exit (ICHPWX01) installed."
+RCVTRIX = c2d(Storage(D2x(RCVT + 24),4)) /* ICHRIX? */                  
+ If RCVTRIX <> 0 Then                                                   
+  say "There IS a VERIFY post-processing exit (ICHRIX01) installed."    
+ else                                                                   
+  say "There is NOT a VERIFY post-processing exit (ICHRIX01) installed."
+RCVTRCX = c2d(Storage(D2x(RCVT + 28),4)) /* ICHRCX? */
+ If RCVTRCX <> 0 Then
+   say "There IS a post-processing exit (ICHRCX01) installed."
+ else
+   say "There is NOT a post-processing exit (ICHRCX01) installed."
+RCVTRDX = c2d(Storage(D2x(RCVT + 32),4)) /* ICHRDX? */
+ If RCVTRDX <> 0 Then
+   say "There IS a post-processing exit (ICHRDX02) installed."
+ else
+   say "There is NOT a postprocessing Verify exit (ICHRDX02) installed."
+RCVTNCX = c2d(Storage(D2x(RCVT + 180),4)) /* ICHNCX? */
+ If RCVTNCX ¬= 0 Then
+   say "There IS a naming convention exit (ICHNCV00) installed."
+ else
+   say "There is NOT a naming convention exit (ICHNCV00) installed."
+RCVTDESX = c2d(Storage(D2x(RCVT + 416),4)) /* ICHDEX? */
+ If RCVTDESX ¬= 0 Then
+   say "There IS a pw encryption exit (ICHDEX01) installed."
+ else
+   say "There is NOT a pw encryption exit (ICHDEX01) installed."
 exit
 
 /* pwcheck function to check for an empty rule but with a max length */
