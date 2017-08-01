@@ -1,0 +1,105 @@
+;--------------------------------------------------------------------
+;  This is a sample ISRDDN control block location file.
+;
+;  If this file is allocated to a ddname of ISRDDN the the
+;  BROWSE command of ISRDDN (OS/390 R5) can use the names to
+;  locate storage. For example:  B LLT  or B JESCT+18?
+;
+;  The entries in this file are samples only, which where
+;  obtained through trial and error and with the data area books.
+;
+;==>  These locations are NOT general use programming interfaces!
+;
+;  They may not be up to date and are all subject to change.
+;
+;  ** Some of these entries don't even work on my system. **
+;
+;  Format of each line is:
+;    name locator-string  comment
+;
+;  If the locator string doesn't make sense the line is ignored.
+;  There are no column dependencies.
+;
+;--------------------------------------------------------------------
+ACEE     ASXB+C8?     Accessor Environment Element
+APHT     CSVT+C?+8?   APF List
+ASCB     CVT?+C?      Address Space Control Block
+ASSB     ASCB+150?    Address Space Secondary Block
+ASVT     CVT+22C?+200     Address Space Vector Table (after prefix)
+ASXB     ASCB+6C?     Address Space Extension Block
+CCT      RMCT+4?      System Resources Manager Control Table
+CDE      RB+C?        Local Cde List
+CTLT     TSVT+4c?+14? TSO parmlib table
+CMCT     RMCT+118?    Channel Measurement Control Table
+CPMT     CMCT+C?      Channel Path Measurement Table
+CSCB     ASCB+38?     Command Scheduling Control Block
+CSVT     ECVT+E4?     Contents Supervisor Table
+CVT      10.?         Communications Vector Table
+CVTEXT   CVT+148?     Communications Vector Table Extention
+CVTFIX   CVT-100      Communications Vector Table Prefix
+DACA     JESCT+78?
+DFA      CVT+4C0?     Dfp Id Table
+DFVT     CVT+4C0?+2C?
+DQE      SPQA?        Vsm Descriptor Queue Element (One Of Zillions)
+DSAB     JSCB+140?+c? Start of dsab chain
+ECVT     CVT+8C?      Extended Communications Vector Table
+EDT      DACA+60?
+GVT      CVT+1B0?     GRS Vector table
+HCCT     SSCVT+1C?    Hasp Common Storage Communication Table
+HID      CVT+42C?     Cpu Information Iosdshid
+ICT      RMCT+8?      Srm i/o Management Control Table
+JCT      JSCB+104?    Job Control Table
+JESCT    CVT+128?     Job Entry Subsystem Communication Table
+JESPEXT  JESCT+64?    Pageable Jesct Extension
+JSCB     TCB+B4?      Job/Step Control Block
+JSTCB    TCB+7C?      Job Step Tcb
+LLE      TCB+24?      Last Load List Element
+LLT      CVT+4DC?     Link List Table
+LLTX     CSVT+4?      Link List Table Volumes???
+LPAQ     CVT+BC?      Lpa Cde List
+;LPAR     STGS+48?+2ec? Lpar information
+LPAR     STGS+88?+334? Lpar information
+LUV      EDT+10?+1C?
+MCT      RMCT+10?     Srm Storage Management Control
+OUCB     ASCB+90?     Resources Manager User Control Block
+OUSB     ASXB+80?     Resources Manager User Swappable Block
+OUXB     ASCB+94?     Resources Manager User Extension Block
+PCCA     PSA+8?       Physical Configuration Communication Area
+PIT      HCCT+5A8?    Initiator List (Changes Frequently With Jes)
+STGS     CVT+31C?     Measurement Facility Contril Block
+PSA      200.         Prefixed Save Area
+PSCB     JSCB+108?    Tso Protected Step Control Block
+PVT      CVT+164?     Rsm Page Vector Table
+RAB      ASCB+178?    Rsm Address Space Block
+RAX      ASCB+16C?    Rsm Address Space Block Extension
+RB       TCB?         Rb for this task
+RCVT     CVT+3E0?
+RMCA     RMCT+14?     System Resource Manager Control Area
+RMCT     CVT+25C?     System Resources Manager Control Table
+RMEX     RMCT+28?     Srm External Entry Poiny Descriptor Table
+RTCT     CVT+23C?     Recovery/Termination Control Table
+SCCB     CVT+340?     Service Call Control Block (Sccb)
+SCT      JSCB+148?    Step Control Table
+SCTX     SCT+44?      Step Control Table Extension
+SCVT     CVT+C8?      Secondary Cvt
+SHDR     CVT+250?
+SJB      PIT+4?
+SMCA     CVT+C4?      Smf Control Table
+SMCX     SMCA+178?    Smca Extension
+SPQA     SPQE+8?
+SPQE     TCB+18?
+SSCT     JESCT+18?    Same As Sscvt
+SSCVT    JESCT+18?    Subsystem Communications Vector Table
+SSIB     JSCB+13C?    Life of Job Subsystem Interface Block
+SSVT     SSCVT+10?    Subsystem Vector Table
+SVCTABLE SCVT+84?     Svc Table
+SVCTAB2  SCVT+88?     Svc Update Recording Table
+SVRB     ASCB+10?
+TCB      CVT??        Task Control Block
+TCBFSA   TCB+70?      Tcb First Save Area
+TCT      TCB+A4?      Smf Timing Control Table
+TIOT     TCB+C?       Task Input/Output Table
+TSB      ASCB+3C?
+TSVT     CVT+9C?
+UPT      PSCB+34?
+VTAMCVT  CVTEXT+40?
