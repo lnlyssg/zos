@@ -31,4 +31,4 @@ In the above example the password was set to "QWERTY1" for both RVARY SWITCH and
 
 If you want to run this in hashcat then the key used to generate the DES hashes is the plaintext password itself! e.g. `$racf$*QWERTY1*5AA70358A9C369E0`
 
-_With thanks to [Nigel Pentland](http://www.racf.co.uk) for his assistance on figuring out the key used_
+_With thanks to [Nigel Pentland](https://www.nigelpentland.co.uk/utilities/) for his assistance on figuring out the key used_
