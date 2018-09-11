@@ -64,8 +64,8 @@ RCVTDSN = Strip(Storage(D2x(RCVT + 56),44))  /* RACF prim dsn        */
        say '    Backup  #'RDSNS' - ' DSDTBACK
      End  /* do RDSNS = 1 to DSDTNUM */
    End
-
-    say  '  The UADS dataset is' RCVTUADS'.'
+  RCVTUADS = Strip(Storage(D2x(RCVT + 100),44)) /* UADS dsn          */
+  say  '  The UADS dataset is' RCVTUADS'.'
 say ""
 /* Below section pulls in bit string values for various settings     */
 RCVTPRO  = RCVx + 393                          /* point to RCVTPRO   */
@@ -258,6 +258,31 @@ If RCVTPWDX = 0 Then
 else
   YesOrNo = 'IS'
 say "There" YesOrNo "a new password exit (ICHPWX01) installed."
+RCVTRIX = c2d(Storage(D2x(RCVT + 24),4)) /* ICHRIX? */
+ If RCVTRIX <> 0 Then
+  say "There IS a VERIFY post-processing exit (ICHRIX01) installed."
+ else
+  say "There is NOT a VERIFY post-processing exit (ICHRIX01) installed."
+RCVTRCX = c2d(Storage(D2x(RCVT + 28),4)) /* ICHRCX? */
+ If RCVTRCX <> 0 Then
+   say "There IS an AUTH post-processing exit (ICHRCX01) installed."
+ else
+   say "There is NOT an AUTH post-processing exit (ICHRCX01) installed."
+RCVTRDX = c2d(Storage(D2x(RCVT + 32),4)) /* ICHRDX? */
+ If RCVTRDX <> 0 Then
+   say "There IS a DEFINE post-processing exit (ICHRDX02) installed."
+ else
+   say "There is NOT a DEFINE post-processing exit (ICHRDX02) installed."
+RCVTNCX = c2d(Storage(D2x(RCVT + 180),4)) /* ICHNCX? */
+ If RCVTNCX <> 0 Then
+   say "There IS a naming convention exit (ICHNCV00) installed."
+ else
+   say "There is NOT a naming convention exit (ICHNCV00) installed."
+RCVTDESX = c2d(Storage(D2x(RCVT + 416),4)) /* ICHDEX? */
+ If RCVTDESX <> 0 Then
+   say "There IS a password encryption exit (ICHDEX01) installed."
+ else
+   say "There is NOT a password encryption exit (ICHDEX01) installed."
 exit
 
 /* pwcheck function to check for an empty rule but with a max length */
