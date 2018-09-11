@@ -122,6 +122,8 @@ say ""
 /* Get password and other related settings */
 RCVTPINV  = C2d(Storage(D2x(RCVT + 155),1))  /* point to RCVTPINV   */
 say "Global password change interval:" RCVTPINV "days"
+RCVTPMIN  = C2d(Storage(D2x(RCVT + 634),1))  /* point to RCVTPMIN   */
+say "Minimum password change interval:" RCVTPMIN "days"
 /* Note that if a rule is set to 8 "*"s then it defaults to "0"s    */
 /* which means the rule appears blank.                              */
 /* Workaround for this is to look at the max length of each rule to */
@@ -256,10 +258,10 @@ If RCVTPWDX = 0 Then
 else
   YesOrNo = 'IS'
 say "There" YesOrNo "a new password exit (ICHPWX01) installed."
-RCVTRIX = c2d(Storage(D2x(RCVT + 24),4)) /* ICHRIX? */                  
- If RCVTRIX <> 0 Then                                                   
-  say "There IS a VERIFY post-processing exit (ICHRIX01) installed."    
- else                                                                   
+RCVTRIX = c2d(Storage(D2x(RCVT + 24),4)) /* ICHRIX? */
+ If RCVTRIX <> 0 Then
+  say "There IS a VERIFY post-processing exit (ICHRIX01) installed."
+ else
   say "There is NOT a VERIFY post-processing exit (ICHRIX01) installed."
 RCVTRCX = c2d(Storage(D2x(RCVT + 28),4)) /* ICHRCX? */
  If RCVTRCX <> 0 Then
