@@ -4,6 +4,8 @@
 
 [SETRRCVT](https://github.com/jaytay79/zos/blob/master/SETRRCVT.rexx) - Rexx to pull out RACF SETROPTS info from storage without needing to have SPECIAL or AUDITOR. _Any comments or additions gratefully received!_  
 
+[REXTRACT](https://github.com/jaytay79/zos/blob/dev/REXTRACT.rexx) - Rexx to extract DES hashes from a RACF database. Work in progress!  
+
 [GENPW](https://github.com/jaytay79/zos/blob/master/GENPW.rexx) - Rexx to generate random passwords.
 
 ### Random stuff
