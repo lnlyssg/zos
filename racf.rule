@@ -1,7 +1,6 @@
-## nothing, reverse, case... base stuff
+## uppercase
 :
-r
-T0
+u
 
 ## simple number append
 $0
@@ -19,14 +18,20 @@ $9
 $@
 $#
 $$
+$£
 
 ## special number append
 $0 $0
+$0 $0 $1
+$0 $0 $7
 $0 $1
+$0 $1 $8
+$0 $1 $9
 $0 $2
 $1 $0
 $1 $1
 $1 $2
+$1 $2 $3
 $1 $3
 $1 $4
 $1 $5
@@ -34,10 +39,16 @@ $1 $6
 $1 $7
 $1 $8
 $1 $9
+$1 $0 $0
 $2 $0
 $2 $1
 $2 $2
 $2 $3
+$2 $3 $4
+$2 $3 $4 $5
+$2 $4
+$2 $5
+$2 $6
 $3 $3
 $4 $4
 $5 $5
@@ -45,21 +56,69 @@ $6 $6
 $6 $9
 $7 $0
 $7 $7
+$7 $8 $9
 $8 $0
 $8 $8
 $9 $0
 $9 $8
 $9 $9
-$1 $2 $3
-$7 $8 $9
 $@ $1
 $@ $1 $2
+$@ $1 $2 $3
 $@ $9
+$@ $9 $9
 $5 $6
 $5 $6 $7
 $5 $6 $7 $8
 $7 $8 $9
 $6 $7 $8 $9
+
+## month append
+$J $A $N
+$@ $J $A $N
+$F $E $B
+$@ $F $E $B
+$M $A $R
+$@ $M $A $R
+$A $P $R
+$@ $A $P $R
+$M $A $Y
+$@ $M $A $Y
+$J $U $N
+$@ $J $U $N
+$J $U $L
+$@ $J $U $L
+$A $U $G
+$@ $A $U $G
+$S $E $P
+$@ $S $E $P
+$O $C $T
+$@ $O $C $T
+$N $O $V
+$@ $N $O $V
+$D $E $C
+$@ $D $E $C
+
+## add years
+$2 $0 $2 $6
+$2 $0 $2 $5
+$2 $0 $2 $4
+$2 $0 $2 $3
+$2 $0 $2 $2
+$2 $0 $2 $1
+$2 $0 $2 $0
+$2 $0 $1 $9
+$@ $2 $0 $1 $9
+$2 $0 $1 $8
+$2 $0 $1 $7
+$2 $0 $1 $6
+$2 $0 $1 $5
+$2 $0 $1 $4
+$2 $0 $1 $3
+$2 $0 $1 $2
+$2 $0 $1 $0
+$2 $0 $0 $0
+$2 $0 $0 $5
 
 ## add 1234 everywhere
 i01i12i23i34
@@ -72,13 +131,17 @@ i61i72i83i94
 
 ## prepend months
 ^H^C^R^A^M
+^R^A^M
 ^E^C^E^D
 ^C^E^D
 ^E^N^U^J
+^N^U^J
 ^E^V^O^N
+^V^O^N
 ^L^I^R^P^A
 ^I^R^P^A
 ^R^P^A
+^Y^A^M
 ^O^T^C^O
 ^T^C^O
 ^R^B^E^F
@@ -88,12 +151,33 @@ i61i72i83i94
 ^U^G^U^A
 ^G^U^A
 ^U^N^A^J
+^N^A^J
 ^Y^L^U^J
 ^L^U^J
 
 ## high frequency append
 $E
 $S
+
+## Sequential keys
+$Q $W $E
+$A $S $D
+$Z $X $C
+$1 $2 $3 $Q
+$Q $A $Z
+
+## Shifted numbers as they appear
+$! $@ $#      # 123 shifted
+$# $$ $%      # 345 shifted
+
+## days of week
+$M $O $N
+$T $U $E
+$W $E $D
+$T $H $U
+$F $R $I
+$S $A $T
+$S $U $N
 
 ## duplicate the last letter of each word one time
 Z1
@@ -109,6 +193,7 @@ Z1
 ] ] ] $Y
 ] ] ] $@ $1 $2
 ] ] ] $1 $2 $3
+] ] ] $@ $1 $2 $3
 ] ] ] $7 $8 $9
 
 ## high frequency prepend
@@ -131,6 +216,7 @@ sA@
 sA4
 sS$
 sS5
+sR4
 
 ## simple extracts
 D2
@@ -149,32 +235,6 @@ D4
 ] ] ] d
 ] ] D1 ]
 
-## rotates
-+5 ] } } } } '4
-x02 { { { { { {
-} ] ] {
-} } -0 x12
-} } }
-} } } } '4
-} } } } } '5
-} } } } } } Y4 '4 d
-
-## add years
-$2 $0 $1 $8
-$2 $0 $1 $7
-$2 $0 $1 $6
-$2 $0 $1 $5
-$2 $0 $0 $0
-
-## unknown
-*04 +0 '4
-*05 x03 d '3 p1
-+0 +0 +0 +0 +0 +0 +0 +0
-+0 +0 +0 x12
-Z4 '8 x42
-Z5 '6 x31 ] p1
-Z5 *75 '5 { x02
-d x28 Y4 '4 d
-f *A5 '8 x14
-p2 '7 p1 x58
-x14 d p2 '6
+## truncate to 8 chars
+'8
+D8
